@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamental Analisis Pro | PT Indofood Sukses Makmur Tbk (INDF)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background-color: #1e293b;
+            border-right: 1px solid #334155;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 100;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 16px 8px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .brand-text h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a:hover, .nav-item.active a {
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: #334155;
+            color: #cbd5e1;
+        }
+
+        .nav-item.active .badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        /* Main Content Wrapper */
+        .main-wrapper {
+            margin-left: 280px;
+            flex: 1;
+            max-width: calc(1600px - 280px);
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1e293b;
+            padding: 20px 28px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            position: sticky;
+            top: 24px;
+            z-index: 90;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-left h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ticker-tag {
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .header-sub {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .verdict-badge {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+            background-color: #22c55e;
+            color: #0f172a;
+        }
+
+        /* Cards and Grid System */
+        .card {
+            background-color: #1e293b;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            scroll-margin-top: 100px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background-color: #3b82f6;
+            border-radius: 2px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Grid utilities */
+        .grid-kpi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        .kpi-card {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #3b82f6;
+        }
+
+        .kpi-card.positive::after { background-color: #22c55e; }
+        .kpi-card.negative::after { background-color: #ef4444; }
+        .kpi-card.warning::after { background-color: #f97316; }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .kpi-sub {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #94a3b8;
+        }
+
+        .kpi-sub.positive { color: #22c55e; }
+        .kpi-sub.negative { color: #ef4444; }
+
+        /* Typography & Layout inside Section Cards */
+        .section-summary {
+            background-color: rgba(59, 130, 246, 0.08);
+            border-left: 4px solid #3b82f6;
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-2col, .grid-3col { grid-template-columns: 1fr; }
+        }
+
+        /* Content Text Formatting */
+        .content-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .content-box h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-box p {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .content-box ul {
+            padding-left: 18px;
+            margin-bottom: 10px;
+        }
+
+        .content-box li {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+
+        /* Ratings and Tags */
+        .rating-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .rating-excellent { background-color: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+        .rating-good { background-color: rgba(59, 130, 246, 0.2); color: #3b82f6; border: 1px solid #3b82f6; }
+        .rating-weak { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+        .rating-warning { background-color: rgba(249, 115, 22, 0.2); color: #f97316; border: 1px solid #f97316; }
+
+        /* Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #0f172a;
+            color: #94a3b8;
+            padding: 12px 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #334155;
+        }
+
+        td {
+            padding: 12px 16px;
+            color: #e2e8f0;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(15, 23, 42, 0.5);
+        }
+
+        tr:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        /* Progress Bars & Score Meters */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #334155;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #22c55e);
+            border-radius: 4px;
+        }
+
+        /* Heatmap Grid */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .heatmap-item {
+            padding: 14px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border: 1px solid transparent;
+        }
+
+        .heatmap-low { background-color: rgba(34, 197, 94, 0.15); border-color: #22c55e; color: #4ade80; }
+        .heatmap-medium { background-color: rgba(249, 115, 22, 0.15); border-color: #f97316; color: #fb923c; }
+        .heatmap-high { background-color: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #f87171; }
+
+        .heatmap-title { font-weight: 700; font-size: 12px; text-transform: uppercase; }
+        .heatmap-desc { font-size: 11px; color: #cbd5e1; }
+
+        /* Thesis Cards */
+        .case-card {
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #0f172a;
+            border-top: 4px solid #3b82f6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .case-bull { border-top-color: #22c55e; }
+        .case-base { border-top-color: #3b82f6; }
+        .case-bear { border-top-color: #ef4444; }
+
+        /* Scorecard Section */
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #1e293b;
+            font-size: 13px;
+        }
+
+        .circle-score {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(#22c55e 0% 86%, #334155 86% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            position: relative;
+        }
+
+        .circle-score-inner {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background-color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-score-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .circle-score-label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* Chart Canvas Containers */
+        .chart-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        /* Print / Mobile styles */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-wrapper { margin-left: 0; max-width: 100%; padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-logo">SI</div>
+            <div class="brand-text">
+                <h2>SLOW INVESTING</h2>
+                <p>Fundamental Analisis Pro</p>
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active"><a href="#dashboard"><span>Dashboard KPI</span></a></li>
+            <li class="nav-item"><a href="#sec1"><span>1. Executive Summary</span></a></li>
+            <li class="nav-item"><a href="#sec2"><span>2. Business Performance</span></a></li>
+            <li class="nav-item"><a href="#sec3"><span>3. Income Statement</span></a></li>
+            <li class="nav-item"><a href="#sec4"><span>4. Balance Sheet</span></a></li>
+            <li class="nav-item"><a href="#sec5"><span>5. Cash Flow Analysis</span></a></li>
+            <li class="nav-item"><a href="#sec6"><span>6. Financial Ratio</span></a></li>
+            <li class="nav-item"><a href="#sec7"><span>7. Earnings Quality</span></a></li>
+            <li class="nav-item"><a href="#sec8"><span>8. Capital Allocation</span></a></li>
+            <li class="nav-item"><a href="#sec9"><span>9. Business Quality</span></a></li>
+            <li class="nav-item"><a href="#sec10"><span>10. Risk Assessment</span></a></li>
+            <li class="nav-item"><a href="#sec11"><span>11. Growth Catalysts</span></a></li>
+            <li class="nav-item"><a href="#sec12"><span>12. Hidden Red Flags</span></a></li>
+            <li class="nav-item"><a href="#sec13"><span>13. Investment Thesis</span></a></li>
+            <li class="nav-item"><a href="#sec14"><span>14. Analyst Scorecard</span></a></li>
+            <li class="nav-item"><a href="#sec15"><span>15. Final Verdict</span></a></li>
+            <li class="nav-item"><a href="#sec16"><span>16. Institutional Opinion</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <h1>PT Indofood Sukses Makmur Tbk <span class="ticker-tag">INDF.JK</span></h1>
+                <div class="header-sub">Sektor: Consumer Non-Cyclicals | Sub-Industri: Processed Foods | Audit FY2025 Financial Statement</div>
+            </div>
+            <div class="header-right">
+                <div>
+                    <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; text-align: right;">Rekomendasi Analis</div>
+                    <div class="verdict-badge">BUY / ACCUMULATE</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD KPI -->
+        <section id="dashboard" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Executive Institutional Dashboard</div>
+                    <div class="card-subtitle">Ringkasan indikator keuangan utama berbasis laporan keuangan diaudit 2025</div>
+                </div>
+                <span class="rating-badge rating-excellent">Fundamental Strong</span>
+            </div>
+            <div class="grid-kpi">
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Total Revenue</span>
+                    <span class="kpi-value">Rp 123,49 Triliun</span>
+                    <span class="kpi-sub positive">▲ +6,66% YoY</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Laba Bersih Entitas Induk</span>
+                    <span class="kpi-value">Rp 10,68 Triliun</span>
+                    <span class="kpi-sub positive">▲ +23,64% YoY</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Operating Cash Flow</span>
+                    <span class="kpi-value">Rp 19,54 Triliun</span>
+                    <span class="kpi-sub positive">▲ +11,61% YoY</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Free Cash Flow (FCF)</span>
+                    <span class="kpi-value">Rp 14,25 Triliun</span>
+                    <span class="kpi-sub positive">▲ +17,82% YoY</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">ROE (Return on Equity)</span>
+                    <span class="kpi-value">14,61%</span>
+                    <span class="kpi-sub positive">▲ vs 13,27% (2024)</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">ROA (Return on Assets)</span>
+                    <span class="kpi-value">7,14%</span>
+                    <span class="kpi-sub positive">▲ vs 6,48% (2024)</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">ROIC / ROCE</span>
+                    <span class="kpi-value">14,44%</span>
+                    <span class="kpi-sub warning">▶ Stabil (+0.07% YoY)</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Debt to Equity Ratio (DER)</span>
+                    <span class="kpi-value">0,62x</span>
+                    <span class="kpi-sub positive">▼ Turun dari 0,65x</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Current Ratio</span>
+                    <span class="kpi-value">2,13x</span>
+                    <span class="kpi-sub positive">▲ Likuiditas sangat aman</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Gross Profit Margin</span>
+                    <span class="kpi-value">33,36%</span>
+                    <span class="kpi-sub positive">▲ vs 34,66% (2024)</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">Net Profit Margin (Total)</span>
+                    <span class="kpi-value">12,60%</span>
+                    <span class="kpi-sub positive">▲ vs 11,29% (2024)</span>
+                </div>
+                <div class="kpi-card positive">
+                    <span class="kpi-label">EPS (Annual)</span>
+                    <span class="kpi-value">Rp 1.216,87</span>
+                    <span class="kpi-sub positive">▲ +23,64% YoY</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. EXECUTIVE SUMMARY -->
+        <section id="sec1" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">1. Executive Summary</div>
+                    <div class="card-subtitle">Ikhtisar Perusahaan & Thesis Utama Institusi</div>
+                </div>
+                <div class="rating-badge rating-excellent">Executive Score: 86 / 100</div>
+            </div>
+            <div class="section-summary">
+                <strong>Ringkasan Eksekutif:</strong> PT Indofood Sukses Makmur Tbk (INDF) mencatatkan kinerja fundamental yang amat solid pada tahun fiskal 2025. Pendapatan konsolidasi tumbuh 6,66% YoY menjadi Rp 123,49 Triliun, didorong oleh efisiensi daya beli sektor Consumer Branded Products (CBP/ICBP) dan normalisasi harga komoditas gandum serta sawit (CPO). Laba bersih yang diatribusikan ke pemilik entitas induk melonjak 23,64% YoY menjadi Rp 10,68 Triliun (EPS Rp 1.216,87).
+            </div>
+            <div class="grid-3col">
+                <div class="content-box">
+                    <h4>Hal Paling Positif</h4>
+                    <ul>
+                        <li><strong>Generasi Arus Kas Impresif:</strong> Operating Cash Flow mencapai Rp 19,54 Triliun dengan Free Cash Flow Rp 14,25 Triliun (FCF yield ~20%), memberikan fleksibilitas dividen dan de-leveraging.</li>
+                        <li><strong>Penurunan Beban Keuangan / FX:</strong> Kerugian selisih kurs drastis menurun, dan beban bunga berkurang dari Rp 6,19 T menjadi Rp 5,97 T.</li>
+                        <li><strong>Penguatan Neraca:</strong> Kas dan setara kas membengkak menjadi Rp 47,47 Triliun, meningkatkan net debt coverage secara signifikan.</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h4>Hal Paling Negatif</h4>
+                    <ul>
+                        <li><strong>Beban Pokok Penjualan Naik:</strong> COGS naik +8,79% YoY (menjadi Rp 82,30 Triliun), menggerus Gross Margin sebesar 130 bps ke level 33,36%.</li>
+                        <li><strong>Beban Goodwill Masih Tinggi:</strong> Goodwill bernilai Rp 56,35 Triliun (akibat akuisisi Pinehill di masa lalu) mendominasi 25,8% dari total aset.</li>
+                        <li><strong>Volatilitas Harga Bahan Baku:</strong> Volatilitas harga CPO dan gandum internasional membayangi margin Bogasari dan Agribisnis.</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h4>Perhatian Utama Investor</h4>
+                    <ul>
+                        <li><strong>Valuasi Sangat Diskon:</strong> INDF diperdagangkan pada PER ~5,57x dan PBV ~0,81x, sebuah teritori terdistorsi mengingat ROE mencapai 14,61%.</li>
+                        <li><strong>Alokasi Modal Pinehill:</strong> Investor perlu memantau utang mata uang asing ICBP dan repayment jadwal obligasi global.</li>
+                        <li><strong>Transmisi Volatilitas Valas:</strong> Fluktuasi USD/IDR terhadap porsi utang obligasi denominasi dolar.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. BUSINESS PERFORMANCE -->
+        <section id="sec2" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">2. Business Performance</div>
+                    <div class="card-subtitle">Analisis Operasional, Segmen, dan Geografis</div>
+                </div>
+                <span class="rating-badge rating-excellent">Rating: Excellent</span>
+            </div>
+            <div class="section-summary">
+                <strong>Insight Kinerja Bisnis:</strong> Pertumbuhan pendapatan konsolidasi disokong oleh ketahanan segmen CBP (ICBP) yang menyumbang mayoritas penjualan dan laba usaha, disusul oleh stabilitas Bogasari serta pemulihan margin di grup Agribisnis (SIMP/Salim Ivomas) dan Distribusi.
+            </div>
+            <div class="grid-2col">
+                <div class="content-box">
+                    <h4>Analisis Mendalam Segmen Usaha</h4>
+                    <p><strong>1. Consumer Branded Products (CBP - PT Indofood CBP Sukses Makmur Tbk):</strong> Menjadi kontributor terbesar (~65% dari total penjualan konsolidasi). Pertumbuhan didorong oleh inovasi produk mi instan (Indomie) di pasar domestik dan ekspansi penetrasi pasar ekspor/MENA melalui Pinehill.</p>
+                    <p><strong>2. Bogasari (Penggilingan Tepung):</strong> Menyumbang volume stabil. Penurunan harga gandum global pada 2025 membantu menjaga margin operasional meskipun terjadi penyesuaian ASP (Average Selling Price).</p>
+                    <p><strong>3. Agribisnis (Perkebunan & CPO):</strong> Mengalami perbaikan margin operasi dipicu oleh stabilnya harga CPO domestik dan kenaikan produktivitas TBS (Tandan Buah Segar).</p>
+                    <p><strong>4. Distribusi:</strong> Jaringan distribusi PT Indomarco Adi Prima memperkuat efisiensi rantai pasok dan memperluas jaringan ke pasar modern serta tradisional.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartSegment"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. INCOME STATEMENT ANALYSIS -->
+        <section id="sec3" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">3. Income Statement Analysis</div>
+                    <div class="card-subtitle">Evaluasi Profitabilitas dan Pembentukan Laba</div>
+                </div>
+                <span class="rating-badge rating-good">Rating: Good</span>
+            </div>
+            <div class="section-summary">
+                <strong>Insight Laba Rugi:</strong> Pertumbuhan top-line +6,66% YoY dikombinasikan dengan kontrol ketat atas beban usaha (-2,49% YoY) berhasil menaikkan Laba Usaha sebesar +6,42% YoY menjadi Rp 24,57 Triliun. Laba Bersih melonjak drastis +23,64% YoY karena tidak adanya tekanan rugi kurs besar seperti periode 2023-2024.
+            </div>
+            <div class="grid-2col">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metrik Laba Rugi (Rp Miliar)</th>
+                                <th class="text-right">FY2024</th>
+                                <th class="text-right">FY2025</th>
+                                <th class="text-right">Pertumbuhan (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Penjualan / Pendapatan Usaha</td>
+                                <td class="text-right">115.786,52</td>
+                                <td class="text-right">123.493,21</td>
+                                <td class="text-right positive">+6,66%</td>
+                            </tr>
+                            <tr>
+                                <td>Beban Pokok Penjualan (COGS)</td>
+                                <td class="text-right">(75.649,99)</td>
+                                <td class="text-right">(82.300,86)</td>
+                                <td class="text-right negative">+8,79%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Laba Kotor (Gross Profit)</strong></td>
+                                <td class="text-right"><strong>40.136,53</strong></td>
+                                <td class="text-right"><strong>41.192,36</strong></td>
+                                <td class="text-right positive"><strong>+2,63%</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Beban Usaha (Selling & GA)</td>
+                                <td class="text-right">(17.048,30)</td>
+                                <td class="text-right">(16.623,32)</td>
+                                <td class="text-right positive">-2,49%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Laba Usaha (EBIT)</strong></td>
+                                <td class="text-right"><strong>23.088,23</strong></td>
+                                <td class="text-right"><strong>24.569,04</strong></td>
+                                <td class="text-right positive"><strong>+6,42%</strong></td>
+                            </tr>
+                            <tr>
+                                <td>EBITDA</td>
+                                <td class="text-right">27.078,03</td>
+                                <td class="text-right">28.701,51</td>
+                                <td class="text-right positive">+5,99%</td>
+                            </tr>
+                            <tr>
+                                <td>Beban Keuangan & Bunga</td>
+                                <td class="text-right">(6.192,23)</td>
+                                <td class="text-right">(5.973,88)</td>
+                                <td class="text-right positive">-3,53%</td>
+                            </tr>
+                            <tr>
+                                <td>Laba Sebelum Pajak</td>
+                                <td class="text-right">17.039,78</td>
+                                <td class="text-right">20.037,70</td>
+                                <td class="text-right positive">+17,59%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Laba Bersih Entitas Induk</strong></td>
+                                <td class="text-right"><strong>8.641,61</strong></td>
+                                <td class="text-right"><strong>10.684,65</strong></td>
+                                <td class="text-right positive"><strong>+23,64%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartMargins"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. BALANCE SHEET ANALYSIS -->
+        <section id="sec4" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">4. Balance Sheet Analysis</div>
+                    <div class="card-subtitle">Kekuatan Struktur Modal dan Solvensi</div>
+                </div>
+                <span class="rating-badge rating-excellent">Rating: Excellent</span>
+            </div>
+            <div class="section-summary">
+                <strong>Insight Neraca:</strong> Total Aset tumbuh menjadi Rp 217,98 Triliun (+8,07% YoY), dipimpin oleh akumulasi Kas & Setara Kas sebesar Rp 47,47 Triliun (+22,63% YoY). Liabilitas terkendali di Rp 97,75 Triliun, sementara Ekuitas melonjak menjadi Rp 120,24 Triliun, secara masif menurunkan risiko leverage.
+            </div>
+            <div class="grid-2col">
+                <div class="chart-container">
+                    <canvas id="chartBalanceSheet"></canvas>
+                </div>
+                <div class="content-box">
+                    <h4>Struktur & Komposisi Neraca</h4>
+                    <ul>
+                        <li><strong>Likuiditas Kas Sangat Melimpah:</strong> Porsi kas mencakup 52,5% dari total aset lancar dan 21,8% dari total aset konsolidasi. Ini memberikan bantalan likuiditas ekstra kuat terhadap volatilitas pasar suku bunga.</li>
+                        <li><strong>Dua Pilar Utama Aset Tidak Lancar:</strong> Goodwill sebesar Rp 56,35 Triliun (Pinehill acquisition) dan Aset Tetap sebesar Rp 49,79 Triliun membentuk porsi terbesar aset tidak lancar.</li>
+                        <li><strong>Profil Utang (Debt Profile):</strong> Total utang finansial berbunga (short & long-term debt) berdiri di Rp 74,70 Triliun. Namun dengan kas Rp 47,47 Triliun, **Net Debt hanya sebesar Rp 27,23 Triliun** (sangat aman, Net Debt/EBITDA ~0.95x).</li>
+                        <li><strong>BVPS (Book Value Per Share):</strong> Nilai buku per saham entitas induk meningkat menjadi Rp 8.330,73 (dibandingkan harga saham pasar yang berada di teritori undervalue ~Rp 6.800 - 7.200).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. CASH FLOW ANALYSIS -->
+        <section id="sec5" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">5. Cash Flow Analysis</div>
+                    <div class="card-subtitle">Konversi Laba Menjadi Kas Nyata & Free Cash Flow</div>
+                </div>
+                <span class="rating-badge rating-excellent">Rating: Excellent</span>
+            </div>
+            <div class="section-summary">
+                <strong>Insight Arus Kas:</strong> INDF adalah "Cash Generation Machine". Operating Cash Flow Rp 19,54 Triliun jauh melampaui Laba Bersih Konsolidasi (Rp 15,56 Triliun), mengindikasikan kualitas laba yang sangat tinggi (High Earnings Quality / Accrual ratio negatif).
+            </div>
+            <div class="grid-2col">
+                <div class="content-box">
+                    <h4>Analisis Arus Kas & FCF</h4>
+                    <p><strong>Arus Kas Operasi (OCF):</strong> Meningkat dari Rp 17,51 Triliun (2024) menjadi Rp 19,54 Triliun (2025). Penerimaan dari pelanggan mencapai Rp 122,60 Triliun.</p>
+                    <p><strong>Capital Expenditure (Capex):</strong> Disiplin capex dipertahankan pada Rp 5,30 Triliun (hanya ~4,3% dari total revenue), dialokasikan terutama untuk pemeliharaan pabrik mi instan, perluasan jaringan distribusi, dan perawatan perkebunan.</p>
+                    <p><strong>Free Cash Flow (FCF):</strong> Mencapai rekor Rp 14,25 Triliun (+17,82% YoY). FCF per saham berdiri di Rp 1.622,42 per lembar, memberikan FCF Yield sangat atraktif >20% terhadap harga saham saat ini.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartCashFlow"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. FINANCIAL RATIO -->
+        <section id="sec6" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">6. Financial Ratio & Performance Radar</div>
+                    <div class="card-subtitle">Rasio Keuangan Multi-Dimensi Institusional</div>
+                </div>
+                <span class="rating-badge rating-excellent">Score: 88 / 100</span>
+            </div>
+            <div class="grid-2col">
+                <div class="chart-container">
+                    <canvas id="chartRadar"></canvas>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kelompok Rasio</th>
+                                <th>Metrik</th>
+                                <th class="text-right">FY2024</th>
+                                <th class="text-right">FY2025</th>
+                                <th>Evaluasi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">Profitabilitas</td>
+                                <td>Return on Equity (ROE)</td>
+                                <td class="text-right">13,27%</td>
+                                <td class="text-right positive">14,61%</td>
+                                <td class="positive">Meningkat</td>
+                            </tr>
+                            <tr>
+                                <td>Return on Assets (ROA)</td>
+                                <td class="text-right">6,48%</td>
+                                <td class="text-right positive">7,14%</td>
+                                <td class="positive">Sangat Efisien</td>
+                            </tr>
+                            <tr>
+                                <td>ROIC / ROCE</td>
+                                <td class="text-right">14,51%</td>
+                                <td class="text-right positive">14,44%</td>
+                                <td class="positive">Sangat Kuat</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Margin Usaha</td>
+                                <td>Gross Margin</td>
+                                <td class="text-right">34,66%</td>
+                                <td class="text-right warning">33,36%</td>
+                                <td class="warning">Sedikit Tertekan</td>
+                            </tr>
+                            <tr>
+                                <td>Operating Margin</td>
+                                <td class="text-right">19,94%</td>
+                                <td class="text-right positive">19,89%</td>
+                                <td class="positive">Stabil Tinggi</td>
+                            </tr>
+                            <tr>
+                                <td>Net Margin (Parent)</td>
+                                <td class="text-right">7,46%</td>
+                                <td class="text-right positive">8,65%</td>
+                                <td class="positive">Ekspansi Margin</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Solvensi & Likuiditas</td>
+                                <td>Current Ratio</td>
+                                <td class="text-right">2,15x</td>
+                                <td class="text-right positive">2,13x</td>
+                                <td class="positive">Sangat Likuid</td>
+                            </tr>
+                            <tr>
+                                <td>Debt to Equity (DER)</td>
+                                <td class="text-right">0,65x</td>
+                                <td class="text-right positive">0,62x</td>
+                                <td class="positive">De-leveraging</td>
+                            </tr>
+                            <tr>
+                                <td>Interest Coverage</td>
+                                <td class="text-right">3,73x</td>
+                                <td class="text-right positive">4,11x</td>
+                                <td class="positive">Aman</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. EARNINGS QUALITY -->
+        <section id="sec7" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">7. Earnings Quality & Forensic Accounting</div>
+                    <div class="card-subtitle">Pemeriksaan Kualitas Laba & Potensi Manipulasi</div>
+                </div>
+                <span class="rating-badge rating-excellent">Risk Level: LOW RISK</span>
+            </div>
+            <div class="section-summary">
+                <strong>Pemeriksaan Forensik Akuntansi:</strong> Kualitas laba INDF dikategorikan **HIGH QUALITY**. Tidak ditemukan indikasi manipulasi akuntansi, revaluasi aset tidak wajar, maupun akrual agresif. Kas operasional melebihi laba bersih, serta pertumbuhan piutang berjalan selaras dengan pertumbuhan penjualan.
+            </div>
+            <div class="grid-3col">
+                <div class="content-box">
+                    <h4>Pemeriksaan Akrual & Kas</h4>
+                    <p><strong>Operating Cash Flow vs Net Profit:</strong> OCF Rp 19,54 T jauh lebih tinggi dibanding Net Profit Rp 15,56 T. Rasio OCF/Net Profit = 1,25x (Standard sehat > 1,0x).</p>
+                    <p><strong>Kualitas Piutang:</strong> Piutang Usaha tumbuh +14,08% YoY (ke Rp 10,59 T), mencerminkan ekspansi volume penjualan akhir tahun namun tetap terkendali.</p>
+                </div>
+                <div class="content-box">
+                    <h4>Pemeriksaan Item Non-Operasional</h4>
+                    <p><strong>Rugi/Laba Kurs:</strong> Kerugian selisih kurs yang selama ini menjadi sumber volatilitas laba telah mereda signifikan pada FY2025 menjadi gain net senilai Rp 27,38 Miliar (vs rugi Rp 1,36 T pada 2024).</p>
+                    <p><strong>One-off Gain:</strong> Tidak ada keuntungan pelepasan aset materiil yang menggelembungkan laba secara artifisial.</p>
+                </div>
+                <div class="content-box">
+                    <h4>Pemeriksaan Persediaan</h4>
+                    <p><strong>Persediaan (Inventory):</strong> Tumbuh sangat wajar sebesar +4,11% YoY menjadi Rp 18,69 Triliun (lebih lambat dari pertumbuhan pendapatan +6,66%), menandakan efisiensi perputaran persediaan yang membaik.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. CAPITAL ALLOCATION -->
+        <section id="sec8" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">8. Capital Allocation & Management Efficiency</div>
+                    <div class="card-subtitle">Evaluasi Penggunaan Modal oleh Manajemen</div>
+                </div>
+                <span class="rating-badge rating-good">Rating: Good</span>
+            </div>
+            <div class="section-summary">
+                <strong>Insight Alokasi Modal:</strong> Manajemen menerapkan pendekatan konservatif namun terukur. Reinvestasi capex dipertahankan pada tingkat efisien, pembayaran dividen rutin dilakukan dengan dividend payout ratio ~40-50%, dan sisa FCF dialokasikan untuk memperkuat posisi kas guna melunasi utang jatuh tempo.
+            </div>
+            <div class="grid-2col">
+                <div class="content-box">
+                    <h4>Pilar Alokasi Modal Manajemen</h4>
+                    <ul>
+                        <li><strong>Organic Capex (Rp 5,30 Triliun):</strong> Berfokus pada automasi lini produksi mi instan ICBP, ekspansi kapasitas pabrik bahan baku Bogasari, serta peremajaan tanaman kelapa sawit (replanting) di segmen Agribisnis.</li>
+                        <li><strong>Pengembalian Kepada Pemegang Saham (Dividen):</strong> INDF membagikan dividen secara konsisten setiap tahun dengan yield berkisar 4,5% - 5,5%.</li>
+                        <li><strong>Manajemen De-leveraging Utang:</strong> Menggunakan FCF untuk mengurangi saldo utang bersih dan menumpuk cadangan kas (Rp 47,47 Triliun) sebagai kesiapsiagaan menghadapi refinancing utang bond Pinehill.</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h4>Efisiensi Modal (ROIC vs WACC)</h4>
+                    <p>Dengan Return on Capital Employed (ROCE) berada di tingkat **14,44%** dan perkiraan Weighted Average Cost of Capital (WACC) INDF di kisaran **8,5% - 9,0%**, INDF secara konsisten menghasilkan **Economic Value Added (EVA) positif** sebesar ~5,5% di atas biaya modalnya.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. BUSINESS QUALITY -->
+        <section id="sec9" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">9. Business Quality & Economic Moat</div>
+                    <div class="card-subtitle">Ketahanan Model Bisnis dan Keunggulan Kompetitif</div>
+                </div>
+                <span class="rating-badge rating-excellent">Moat: Wide Moat (Score: 88/100)</span>
+            </div>
+            <div class="grid-3col">
+                <div class="content-box">
+                    <h4>Dominasi Pricing Power</h4>
+                    <p>Produk utama seperti **Indomie** memiliki brand equity yang tak tertandingi di Indonesia dan pasar berkembang. INDF mampu meneruskan kenaikan biaya bahan baku (flour/CPO) kepada konsumen tanpa mengorbankan volume penjualan secara signifikan.</p>
+                </div>
+                <div class="content-box">
+                    <h4>Jaringan Distribusi Unik</h4>
+                    <p>Anak usaha distribusi (PT Indomarco Adi Prima) menjangkau jutaan outlet ritel, warung, hingga pasar modern di seluruh pelosok pulau Indonesia, menciptakan **Barrier to Entry** yang hampir tidak mungkin ditiru oleh pesaing baru.</p>
+                </div>
+                <div class="content-box">
+                    <h4>Integritas Rantai Pasok Vertikal</h4>
+                    <p>Integrasi dari hulu ke hilir (Perkebunan Sawit -> Minyak Goreng -> Tepung Bogasari -> Mi Instan -> Distribusi Logistik) memberikan keunggulan skala ekonomi (*Economies of Scale*) dan kepastian pasokan bahan baku.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. RISK ASSESSMENT -->
+        <section id="sec10" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">10. Risk Assessment Matrix</div>
+                    <div class="card-subtitle">Pemetaan Risiko Operasional, Finansial, dan Pasar</div>
+                </div>
+                <span class="rating-badge rating-warning">Risk Level: Moderate</span>
+            </div>
+            <div class="heatmap-grid">
+                <div class="heatmap-item heatmap-medium">
+                    <div class="heatmap-title">Risiko Nilai Tukar (FX Risk)</div>
+                    <div class="heatmap-desc">Sebagian utang obligasi ICBP/Pinehill berada dalam denominasi USD. Depresiasi Rupiah yang tajam berpotensi menimbulkan rugi kurs non-kas.</div>
+                </div>
+                <div class="heatmap-item heatmap-medium">
+                    <div class="heatmap-title">Fluktuasi Komoditas</div>
+                    <div class="heatmap-desc">Harga gandum giling dan CPO sangat mempengaruhi margin COGS Bogasari dan ICBP.</div>
+                </div>
+                <div class="heatmap-item heatmap-low">
+                    <div class="heatmap-title">Risiko Likuiditas</div>
+                    <div class="heatmap-desc">Sangat rendah. Kas melimpah Rp 47,47 Triliun memberikan perlindungan total terhadap liabilitas jangka pendek.</div>
+                </div>
+                <div class="heatmap-item heatmap-low">
+                    <div class="heatmap-title">Daya Beli Konsumen</div>
+                    <div class="heatmap-desc">Produk FMCG makanan pokok bersifat highly inelastic (tahan terhadap resesi ekonomi).</div>
+                </div>
+                <div class="heatmap-item heatmap-medium">
+                    <div class="heatmap-title">Risiko Geopolitik Ekspor</div>
+                    <div class="heatmap-desc">Pinehill beroperasi di wilayah MENA (Timur Tengah & Afrika Utara) yang memiliki dinamika geopolitik dinamis.</div>
+                </div>
+                <div class="heatmap-item heatmap-low">
+                    <div class="heatmap-title">Risiko Perubahan Regulasi</div>
+                    <div class="heatmap-desc">Kebijakan HET (Harga Eceran Tertinggi) minyak goreng atau pabean gandum terkontrol baik oleh manajemen.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. GROWTH CATALYSTS -->
+        <section id="sec11" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">11. Growth Catalysts (3-10 Years Horizon)</div>
+                    <div class="card-subtitle">Katalis Utama Pendorong Pertumbuhan Laba</div>
+                </div>
+            </div>
+            <div class="content-box">
+                <ul>
+                    <li><strong>1. Ekspansi Pasar MENA & Afrika via Pinehill (Dampak Terbesar):</strong> Penetrasi pasar mi instan di Nigeria, Mesir, Arab Saudi, dan Turki yang memiliki tingkat pertumbuhan populasi muda sangat tinggi. Pinehill menjadi mesin pertumbuhan top-line jangka panjang.</li>
+                    <li><strong>2. Premiumisasi Produk & Inovasi R&D:</strong> Peluncuran lini mi instan premium, produk nutrisi khusus, dan snack sehat dengan margin profitabilitas lebih tinggi di pasar domestik.</li>
+                    <li><strong>3. Perbaikan Margin dari Normalisasi Harga Gandum:</strong> Penurunan bertahap harga gandum internasional memperlebar ruang ekspansi Gross Margin pada divisi Bogasari dan CBP.</li>
+                    <li><strong>4. Efisiensi Biaya Distribusi Digital:</strong> Digitalisasi rantai pasok Indomarco meningkatkan efisiensi persediaan dan kecepatan perputaran barang (*inventory turnover*).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 12. HIDDEN RED FLAGS -->
+        <section id="sec12" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">12. Hidden Red Flags Checklist</div>
+                    <div class="card-subtitle">Deteksi Dini Potensi Masalah Terselubung</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori Red Flag</th>
+                            <th>Status / Temuan pada Laporan</th>
+                            <th>Tingkat Keparahan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Goodwill Impairment Risk</strong></td>
+                            <td>Goodwill bernilai Rp 56,35 Triliun dari akuisisi Pinehill. Jika kinerja Pinehill terganggu ekstrem, impairment goodwill dapat mengurangi saldo ekuitas.</td>
+                            <td><span class="rating-badge rating-warning">MEDIUM</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sengketa Transaksi Pihak Berelasi</strong></td>
+                            <td>Sangat transparan. Transaksi pihak berelasi terbatas pada porsi pasokan CPO dan jasa logistik internal dalam grup Salim.</td>
+                            <td><span class="rating-badge rating-excellent">LOW</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dilusi Saham</strong></td>
+                            <td>Tidak ada program ESOP atau penerbitan saham baru yang mendilusi kepemilikan investor. Saham beredar tetap 8,78 Miliar lembar.</td>
+                            <td><span class="rating-badge rating-excellent">LOW</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mismatch Arus Kas</strong></td>
+                            <td>Tidak ditemukan. Kas operasional secara konsisten menutup modal kerja dan beban utang.</td>
+                            <td><span class="rating-badge rating-excellent">LOW</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Konsentrasi Pelanggan</strong></td>
+                            <td>Sangat terdiversifikasi. Penjualan dilakukan ke jutaan konsumen akhir via saluran eceran. Tidak ada pelanggan tunggal yang berkontribusi >10%.</td>
+                            <td><span class="rating-badge rating-excellent">LOW</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 13. INVESTMENT THESIS -->
+        <section id="sec13" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">13. Investment Thesis Scenario</div>
+                    <div class="card-subtitle">Skenario Investasi Bull, Base, dan Bear Case</div>
+                </div>
+            </div>
+            <div class="grid-3col">
+                <div class="case-card case-bull">
+                    <h4 style="color: #22c55e;">BULL CASE (TP: Rp 9.500)</h4>
+                    <p><strong>Asumsi:</strong> Pertumbuhan pendapatan >9%, stabilisasi nilai tukar Rupiah terhadap USD, ekspansi margin Bogasari/CBP, dan penguatan laba Pinehill secara agresif.</p>
+                    <p><strong>Implikasi Valuasi:</strong> Re-rating PER dari 5.5x ke 8.0x mendekati rata-rata historis 5 tahun.</p>
+                </div>
+                <div class="case-card case-base">
+                    <h4 style="color: #3b82f6;">BASE CASE (TP: Rp 8.200)</h4>
+                    <p><strong>Asumsi:</strong> Pertumbuhan pendapatan 5-7%, inflasi bahan baku moderat, FCF tetap tumbuh stabil, dan payout dividen dipertahankan di ~45%.</p>
+                    <p><strong>Implikasi Valuasi:</strong> Target PER ~7.0x berbasis EPS FY2025.</p>
+                </div>
+                <div class="case-card case-bear">
+                    <h4 style="color: #ef4444;">BEAR CASE (TP: Rp 6.000)</h4>
+                    <p><strong>Asumsi:</strong> Lonjakan tajam harga gandum/CPO global, depresiasi Rupiah yang drastis memicu rugi kurs besar, serta penurunan volume daya beli konsumen domestik.</p>
+                    <p><strong>Implikasi Valuasi:</strong> Multiple PER tertahan di level terdistorsi ~5.0x.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14. ANALYST SCORECARD -->
+        <section id="sec14" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">14. Institutional Analyst Scorecard</div>
+                    <div class="card-subtitle">Penilaian Komprehensif Berstandar Institusi (Skala 100)</div>
+                </div>
+            </div>
+            <div class="grid-2col">
+                <div>
+                    <div class="score-row"><span>Business Quality</span><strong>14 / 15</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 93%;"></div></div>
+
+                    <div class="score-row"><span>Financial Quality</span><strong>18 / 20</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%;"></div></div>
+
+                    <div class="score-row"><span>Cash Flow Generation</span><strong>14 / 15</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 93%;"></div></div>
+
+                    <div class="score-row"><span>Balance Sheet Strength</span><strong>9 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%;"></div></div>
+
+                    <div class="score-row"><span>Profitability Ratios</span><strong>8 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 80%;"></div></div>
+
+                    <div class="score-row"><span>Capital Allocation</span><strong>8 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 80%;"></div></div>
+
+                    <div class="score-row"><span>Management Execution</span><strong>8 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 80%;"></div></div>
+
+                    <div class="score-row"><span>Economic Moat</span><strong>9 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%;"></div></div>
+
+                    <div class="score-row"><span>Growth Catalysts</span><strong>8 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 80%;"></div></div>
+
+                    <div class="score-row"><span>Risk Profile</span><strong>8 / 10</strong></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 80%;"></div></div>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="circle-score">
+                        <div class="circle-score-inner">
+                            <span class="circle-score-number">86</span>
+                            <span class="circle-score-label">OUT OF 100</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; text-align: center;">
+                        <span class="rating-badge rating-excellent" style="font-size: 14px;">INSTITUTIONAL GRADE: A</span>
+                        <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Direkomendasikan untuk Portofolio Jangka Panjang</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 15. FINAL VERDICT -->
+        <section id="sec15" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">15. Final Verdict</div>
+                    <div class="card-subtitle">Keputusan Akhir Investasi</div>
+                </div>
+                <div class="verdict-badge">STRONG BUY / ACCUMULATE</div>
+            </div>
+            <div class="content-box">
+                <h4>Alasan Rinci Keputusan:</h4>
+                <ol style="padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Diskon Valuasi Terlalu Besar:</strong> INDF diperdagangkan pada PER ~5,5x (EPS FY2025 Rp 1.216,87). Ini merupakan valuasi terendah dalam sejarah 10 tahun terakhir untuk konglomerasi FMCG pemimpin pasar dengan ROE 14.61%.</li>
+                    <li><strong>Free Cash Flow Yield Melimpah:</strong> FCF sebesar Rp 14,25 Triliun memberikan FCF yield >20%, memberikan proteksi marjin keamanan (*Margin of Safety*) yang sangat tebal bagi investor defensif.</li>
+                    <li><strong>Normalisasi Laba Bersih:</strong> Meredanya beban kerugian selisih kurs membuka potensi apresiasi harga saham menuju nilai intrinsiknya (Fair Value ~Rp 8.200 - 8.500).</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- 16. INSTITUTIONAL OPINION -->
+        <section id="sec16" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">16. Institutional Fund Manager Opinion (Alokasi Rp 1 Triliun)</div>
+                    <div class="card-subtitle">Perspektif Pengelola Dana Institusi Berstandar Global</div>
+                </div>
+            </div>
+            <div class="content-box" style="border-left: 6px solid #22c55e;">
+                <h3 style="font-size: 24px; color: #22c55e; font-weight: 800; margin-bottom: 12px;">KEPUTUSAN ALOKASI DANA: YA</h3>
+                <p>Sebagai Fund Manager yang mengelola dana Rp 1 triliun, kami **AKAN MENGALOKASIKAN DANA** untuk membeli saham PT Indofood Sukses Makmur Tbk (INDF).</p>
+                
+                <h4 style="margin-top: 16px;">Alasan Utama Pembelian:</h4>
+                <ul>
+                    <li><strong>Kararakteristik Defensif - Growth:</strong> INDF memberikan perlindungan risiko penurunan yang amat kuat (*downside protection*) sekaligus potensi apresiasi modal (*capital gain*) hingga 25-35%.</li>
+                    <li><strong>Dividen Yield Stabil:</strong> Menyediakan arus kas masuk rutin berupa dividen yield ~5% per tahun.</li>
+                    <li><strong>Monopolistic Economic Moat:</strong> Posisi pasar yang tidak tergoyahkan di sektor konsumsi primer Indonesia.</li>
+                </ul>
+
+                <h4 style="margin-top: 16px;">Faktor yang Harus Dipantau pada Laporan Keuangan Berikutnya:</h4>
+                <ul>
+                    <li>Tren margin kotor (Gross Margin) di tengah fluktuasi harga gandum dan CPO global.</li>
+                    <li>Pergerakan nilai tukar USD/IDR dan dampaknya terhadap posisi utang valas konsolidasi.</li>
+                    <li>Realisasi pertumbuhan volume penjualan mi instan di pasar ekspor Pinehill.</li>
+                </ul>
+
+                <h4 style="margin-top: 16px;">Indikator yang Dapat Mengubah Rekomendasi Menjadi AVOID/REDUCE:</h4>
+                <ul>
+                    <li>Penurunan tajam Operating Cash Flow hingga di bawah Laba Bersih secara beruntun selama 2 kuartal.</li>
+                    <li>Kerugian impairment Goodwill materiil pada Pinehill.</li>
+                    <li>Lonjakan Debt-to-Equity Ratio (DER) melampaui 1,5x secara persisten.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CHART.JS INTEGRATION SCRIPT -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Chart 1: Segment Contribution (Doughnut)
+            const ctxSegment = document.getElementById('chartSegment').getContext('2d');
+            new Chart(ctxSegment, {
+                type: 'doughnut',
+                data: {
+                    labels: ['CBP (ICBP)', 'Bogasari', 'Agribisnis', 'Distribusi', 'Lainnya'],
+                    datasets: [{
+                        data: [65, 18, 10, 5, 2],
+                        backgroundColor: ['#3b82f6', '#22c55e', '#f97316', '#a855f7', '#64748b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#cbd5e1', font: { family: 'Inter', size: 11 } } },
+                        title: { display: true, text: 'Estimasi Kontribusi Pendapatan Per Segmen (%)', color: '#f8fafc', font: { size: 13, weight: 'bold' } }
+                    }
+                }
+            });
+
+            // Chart 2: Margins Trend (Line Chart)
+            const ctxMargins = document.getElementById('chartMargins').getContext('2d');
+            new Chart(ctxMargins, {
+                type: 'line',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025'],
+                    datasets: [
+                        { label: 'Gross Margin (%)', data: [32.7, 30.7, 32.3, 34.7, 33.4], borderColor: '#3b82f6', tension: 0.3, fill: false },
+                        { label: 'Operating Margin (%)', data: [17.1, 17.8, 19.4, 19.9, 19.9], borderColor: '#22c55e', tension: 0.3, fill: false },
+                        { label: 'Net Margin Parent (%)', data: [7.7, 5.7, 7.3, 7.5, 8.7], borderColor: '#f97316', tension: 0.3, fill: false }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1', font: { size: 11 } } },
+                        title: { display: true, text: 'Tren Margin Profitabilitas 5 Tahun Terakhir (%)', color: '#f8fafc', font: { size: 13, weight: 'bold' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+
+            // Chart 3: Balance Sheet Breakdown (Bar Chart)
+            const ctxBS = document.getElementById('chartBalanceSheet').getContext('2d');
+            new Chart(ctxBS, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Aset', 'Total Liabilitas', 'Total Ekuitas', 'Kas & Setara Kas', 'Total Utang (Debt)'],
+                    datasets: [{
+                        label: 'Nilai FY2025 (Rp Triliun)',
+                        data: [217.98, 97.75, 120.24, 47.47, 74.70],
+                        backgroundColor: ['#3b82f6', '#ef4444', '#22c55e', '#06b6d4', '#f97316'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Komposisi Neraca FY2025 (Rp Triliun)', color: '#f8fafc', font: { size: 13, weight: 'bold' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+
+            // Chart 4: Cash Flow Trend (Bar Chart)
+            const ctxCF = document.getElementById('chartCashFlow').getContext('2d');
+            new Chart(ctxCF, {
+                type: 'bar',
+                data: {
+                    labels: ['2023', '2024', '2025'],
+                    datasets: [
+                        { label: 'Operating Cash Flow', data: [16.0, 17.51, 19.54], backgroundColor: '#22c55e', borderRadius: 4 },
+                        { label: 'Capex', data: [-4.8, -5.42, -5.30], backgroundColor: '#ef4444', borderRadius: 4 },
+                        { label: 'Free Cash Flow', data: [11.2, 12.09, 14.25], backgroundColor: '#3b82f6', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1' } },
+                        title: { display: true, text: 'Arus Kas & Free Cash Flow (Rp Triliun)', color: '#f8fafc', font: { size: 13, weight: 'bold' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+
+            // Chart 5: Performance Radar
+            const ctxRadar = document.getElementById('chartRadar').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Profitabilitas', 'Solvensi', 'Likuiditas', 'Kualitas Laba', 'Arus Kas', 'Efisiensi'],
+                    datasets: [{
+                        label: 'Skor Kinerja INDF',
+                        data: [85, 88, 92, 95, 95, 82],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: '#3b82f6',
+                        pointBackgroundColor: '#22c55e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Profil Kinerja Institusional INDF', color: '#f8fafc', font: { size: 13, weight: 'bold' } }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#334155' },
+                            grid: { color: '#334155' },
+                            pointLabels: { color: '#cbd5e1', font: { size: 11 } },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
